@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { FaSearch } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
 const Navbar = () => {
   const [value, setValue] = useState("");
 
   // Function to handle search button click
   const handleSearch = () => {
     if (value.trim()) {
-      alert(`Searching for: ${value}`);  
+      alert(`Searching for: ${value}`);
     } else {
       alert("Please enter a search term!");
     }
@@ -16,7 +17,9 @@ const Navbar = () => {
   return (
     <header>
       <nav className="bg-white flex items-center justify-between px-6 py-2 drop-shadow ">
-        <h1 className="text-xl font-medium text-black py-2 ">Keep</h1>
+        <Link to="/" className="text-xl font-medium text-black py-2 ">
+          Keep
+        </Link>
         <div className="relative ">
           <Input
             value={value}
