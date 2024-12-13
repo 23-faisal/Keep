@@ -1,0 +1,29 @@
+{
+  "name": "keep",
+  "version": "1.0.0",
+  "description": "Keep is a full-stack note-taking application built with React, Node.js, and Express.js. Features include user authentication, note creation, editing, deletion, and storage. Designed for simplicity and productivity.",
+  "main": "backend/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/23-faisal/Keep.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/23-faisal/Keep/issues"
+  },
+  "homepage": "https://github.com/23-faisal/Keep#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
