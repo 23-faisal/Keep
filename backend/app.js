@@ -1,22 +1,45 @@
 import express from "express";
 import cors from "cors";
+import errorHandler from "./utils/error.js";
+import "dotenv/config";
 
 const app = express();
 
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
+    origin: [process.env.FRONTEND_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Api is working!",
+app.get("/", (req, res, next) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "API is working!",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// 404 Middleware
+app.use((req, res, next) => {
+  const error = errorHandler(404, "Resource not found");
+  next(error);
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).json({
+    success: false,
+    message,
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
   });
 });
 
