@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import errorHandler from "./utils/error.js";
 import "dotenv/config";
+import authRouter from "./routes/auth.route.js";
 
 const app = express();
 
@@ -25,6 +26,10 @@ app.get("/", (req, res, next) => {
     next(error);
   }
 });
+
+// authentication router
+
+app.use("/api/auth", authRouter);
 
 // 404 Middleware
 app.use((req, res, next) => {
