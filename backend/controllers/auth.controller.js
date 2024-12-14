@@ -51,6 +51,12 @@ export const singUpController = async (req, res, next) => {
 export const signInController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(404).json({
+        success: false,
+        message: "All the field must be filled!",
+      });
+    }
 
     const userExists = await User.findOne({ email });
 
