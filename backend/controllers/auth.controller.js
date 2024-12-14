@@ -76,23 +76,24 @@ export const signInController = async (req, res, next) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: userExists._id, email: userExists.email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: `${userExists.username} signed in successfully!`,
-      user: {
-        email: userExists.email,
-        username: userExists.username,
-      },
-      token,
+    const token = jwt.sign({ id: userExists._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
     });
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json({
+        success: true,
+        message: `${userExists.username} signed in successfully!`,
+        user: {
+          email: userExists.email,
+          username: userExists.username,
+        },
+        token,
+      });
   } catch (error) {
     next(errorHandler(error));
   }
