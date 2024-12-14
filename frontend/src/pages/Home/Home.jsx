@@ -1,5 +1,6 @@
+import AddNote from "@/components/AddNote/AddNote";
 import NoteCard from "@/components/NoteCard/NoteCard";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MdAdd } from "react-icons/md";
 
 const Home = () => {
@@ -43,9 +44,19 @@ const Home = () => {
           onPinNote={() => {}}
         />
       </div>
-      <button className="bg-blue-500 hover:bg-blue-600 absolute right-10 bottom-10 rounded-md ">
-        <MdAdd className="w-12 h-12 text-lg text-white  extrabold " />
-      </button>
+
+      <div className="w-full   ">
+        <Dialog className="mx-4 ">
+          <DialogTrigger asChild>
+            <button className="bg-blue-500 hover:bg-blue-600 absolute right-10 bottom-10 rounded-md ">
+              <MdAdd className="w-12 h-12 text-lg text-white  extrabold " />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="w-11/12 sm:max-w-md rounded-md ">
+            <AddNote />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };
