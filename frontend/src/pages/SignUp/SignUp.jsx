@@ -3,10 +3,14 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 const SignUp = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -14,18 +18,40 @@ const SignUp = () => {
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/sign-up`,
+        data
+      );
+
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: response?.data.message,
+          variant: "success",
+        });
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <main className="px-4 sm:px-2 md:px-0">
-      <div className="max-w-xl mt-28 mx-auto border-2 p-8 rounded-md shadow-sm shadow-button  ">
-        <h1 className="text-2xl font-bold mb-6 text-center  ">Sign Up</h1>
+      <div className="max-w-xl mt-28 mx-auto border-2 p-8 rounded-md shadow-sm shadow-button">
+        <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Username Field */}
-          <div className="flex flex-col  gap-2 ">
-            <Label className="font-semibold text-md " htmlFor="username">
+          <div className="flex flex-col gap-2">
+            <Label className="font-semibold text-md" htmlFor="username">
               Username
             </Label>
             <Input
@@ -45,8 +71,8 @@ const SignUp = () => {
           </div>
 
           {/* Email Field */}
-          <div className="flex flex-col  gap-2 ">
-            <Label className="font-semibold text-md " htmlFor="email">
+          <div className="flex flex-col gap-2">
+            <Label className="font-semibold text-md" htmlFor="email">
               Email
             </Label>
             <Input
@@ -66,8 +92,8 @@ const SignUp = () => {
           </div>
 
           {/* Password Field */}
-          <div className="flex flex-col gap-2  relative">
-            <Label className="font-semibold text-md " htmlFor="password">
+          <div className="flex flex-col gap-2 relative">
+            <Label className="font-semibold text-md" htmlFor="password">
               Password
             </Label>
             <div className="relative">
@@ -102,20 +128,20 @@ const SignUp = () => {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-blue-500 font-semibold text-md  text-white p-2 rounded hover:bg-blue-600"
+            className="w-full bg-blue-500 font-semibold text-md text-white p-2 rounded hover:bg-blue-600"
           >
             Sign Up
           </Button>
         </form>
 
         <div className="mt-2 font-semibold">
-          <p className="flex flex-col sm:flex-row  items-center gap-1 sm:gap-2 ">
-            <span className="">Already have an account?</span>
+          <p className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+            <span>Already have an account?</span>
             <Link
-              className="text-blue-500 hover:text-teal-600 transition ease-in-out duration-100 "
+              className="text-blue-500 hover:text-teal-600 transition ease-in-out duration-100"
               to="/sign-in"
             >
-              Sing in
+              Sign in
             </Link>
           </p>
         </div>
