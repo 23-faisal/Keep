@@ -5,6 +5,8 @@ import "dotenv/config";
 import authRouter from "./routes/auth.route.js";
 import notesRouter from "./routes/note.route.js";
 import cookieParser from "cookie-parser";
+import authMiddleware from "./middlewares/auth.middleware.js";
+import User from "./models/user.model.js";
 
 const app = express();
 
@@ -32,6 +34,35 @@ app.get("/", (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+});
+
+// get the user
+app.use("/get-user", authMiddleware, async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+
+    const user = await User.findOne({ _id: _id });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: `Couldn't find the user`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `User data fetched successfully!`,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    next(errorHandler(error));
   }
 });
 
