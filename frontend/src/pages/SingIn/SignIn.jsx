@@ -7,10 +7,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthStore } from "../../store/userStore";
 
 const SignIn = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { setUser } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -25,14 +27,13 @@ const SignIn = () => {
         data
       );
 
-      
-
       if (response.data.success) {
         toast({
           title: "Log in Successful",
           description: `${response?.data.user.username} logged in successfully!`,
           variant: "success",
         });
+        setUser({ user: response.data.user, token: response.data.token });
         navigate("/");
       }
     } catch (error) {
