@@ -27,7 +27,7 @@ const SignUp = () => {
 
       if (response.data.success) {
         toast({
-          title: "Success",
+          title: "Sign up successful",
           description: response?.data.message,
           variant: "success",
         });
