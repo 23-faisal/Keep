@@ -107,6 +107,8 @@ export const getAllNotes = async (req, res, next) => {
   }
 };
 
+// delete a note
+
 export const deleteNote = async (req, res, next) => {
   try {
     const { _id } = req.user;
@@ -132,6 +134,40 @@ export const deleteNote = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Note deleted successfully",
+    });
+  } catch (error) {
+    next(errorHandler(error));
+  }
+};
+
+// update pinned value of a note
+
+export const updatePinnedValue = async (req, res, next) => {
+  try {
+    const { noteId } = req.params;
+    const { _id } = req.user;
+
+    const note = await Note.findOne({
+      _id: noteId,
+      userId: _id,
+    });
+
+    if (!note) {
+      return res.status(400).json({
+        success: false,
+        message: "Note not found",
+      });
+    }
+
+    // Toggle the isPinned value
+    note.isPinned = !note.isPinned;
+
+    await note.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Note ${note.isPinned ? "pinned" : "unpinned"} successfully`,
+      note,
     });
   } catch (error) {
     next(errorHandler(error));
