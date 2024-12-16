@@ -106,3 +106,34 @@ export const getAllNotes = async (req, res, next) => {
     next(errorHandler(error));
   }
 };
+
+export const deleteNote = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const { noteId } = req.params;
+
+    const note = await Note.findOne({
+      _id: noteId,
+      userId: _id,
+    });
+
+    if (!note) {
+      return res.status(400).json({
+        success: false,
+        message: "Note not found!",
+      });
+    }
+
+    await Note.deleteOne({
+      _id: noteId,
+      userId: _id,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Note deleted successfully",
+    });
+  } catch (error) {
+    next(errorHandler(error));
+  }
+};
