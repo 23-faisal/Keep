@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./pages/SingIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import Navbar from "./components/Navbar/Navbar";
-import { Toaster } from "./components/ui/toaster";
+import { Toaster } from "sonner";
+import RestrictedRoute from "./pages/RestrictedRoute/RestrictedRoute";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -12,11 +14,20 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
+          {/* Restricted Route */}
+
+          <Route element={<RestrictedRoute />}>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+          </Route>
+
+          {/* Private Route (accessible only when authenticated) */}
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Home />} />
+          </Route>
         </Routes>
-        <Toaster />
+        <Toaster position="bottom-center" />
       </Router>
     </>
   );

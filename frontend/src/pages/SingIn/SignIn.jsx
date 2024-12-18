@@ -3,13 +3,15 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
 import useAuthStore from "@/store/userStore";
+import { toast } from "sonner";
 
 const SignIn = () => {
   const { setUser, setToken } = useAuthStore();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -35,12 +37,13 @@ const SignIn = () => {
         setUser(user);
         setToken(token);
 
-        console.log("Sign-in successful:", response.data.message);
+        toast(`${response.data.message}`);
+        navigate("/");
       } else {
-        console.log(response.data.message || "Sign-in failed.");
+        console.log(response?.data?.message || "Sign-in failed.");
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error?.response?.data?.message || "An error occurred.");
     }
   };
 
