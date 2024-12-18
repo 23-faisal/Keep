@@ -83,6 +83,8 @@ export const signInController = async (req, res, next) => {
     res
       .cookie("token", token, {
         httpOnly: true,
+        secure: process.env.NODE_ENV !== "development", // Only send cookie over HTTPS in production
+        sameSite: "strict",
       })
       .status(200)
       .json({

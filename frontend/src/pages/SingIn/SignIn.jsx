@@ -3,16 +3,13 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthStore } from "../../store/userStore";
+import useAuthStore from "@/store/userStore";
 
 const SignIn = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { setUser } = useAuthStore();
+  const { setUser, setToken } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -23,27 +20,27 @@ const SignIn = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/sign-in`,
-        data
+        `${import.meta.env.VITE_API_URL}/api/auth/sign-in `,
+        data,
+        {
+          withCredentials: true,
+        }
       );
 
-      if (response.data.success) {
-        toast({
-          title: "Log in Successful",
-          description: `${response?.data.user.username} logged in successfully!`,
-          variant: "success",
-        });
-        setUser({ user: response.data.user, token: response.data.token });
-        navigate("/");
+      console.log(response.data);
+
+      if (response.data?.success) {
+        const { user, token } = response.data;
+
+        setUser(user);
+        setToken(token);
+
+        console.log("Sign-in successful:", response.data.message);
+      } else {
+        console.log(response.data.message || "Sign-in failed.");
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          error.response?.data?.message ||
-          "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+      console.log(error.message);
     }
   };
 
