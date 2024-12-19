@@ -30,7 +30,7 @@ const NoteCard = ({
     year: "numeric",
   });
 
-  console.log(formattedDate);
+ 
   return (
     <div
       className={`${
