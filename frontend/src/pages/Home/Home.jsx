@@ -41,6 +41,8 @@ const Home = () => {
     enabled: !!token,
   });
 
+  console.log(notes);
+
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
@@ -108,6 +110,26 @@ const Home = () => {
     setTags((prev) => prev.filter((t) => t !== tag));
   };
 
+  const togglePinNote = async (noteId) => {
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/notes/update-note-pinned/${noteId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Note pin state updated");
+      refetch();
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update pin state"
+      );
+    }
+  };
+
   if (isLoading) {
     return <p>Loading notes...</p>;
   }
@@ -125,7 +147,7 @@ const Home = () => {
             <NoteCard
               key={note._id}
               title={note.title}
-              date={note.date}
+              date={note.createdAt}
               content={note.content}
               tags={note.tags}
               isPinned={note.isPinned}
@@ -138,7 +160,7 @@ const Home = () => {
                   content: note.content,
                 });
               }}
-              onPinNote={() => {}}
+              onPinNote={() => togglePinNote(note._id)}
               onDelete={() => deleteNote(note._id)}
             />
           ))}

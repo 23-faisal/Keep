@@ -21,12 +21,28 @@ const NoteCard = ({
   onDelete,
   onPinNote,
 }) => {
+  const createdAt = new Date(date);
+  const formattedDate = createdAt.toLocaleString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+  console.log(formattedDate);
   return (
-    <div className="border rounded p-4 bg-white hover:shadow-xl transition-all ease-in-out">
+    <div
+      className={`${
+        isPinned ? "bg-slate-100" : "bg-white"
+      }   border rounded p-4 bg-white hover:shadow-xl transition-all ease-in-out`}
+    >
       <div className="flex items-center justify-between">
         <div>
-          <h6 className="text-sm font-medium">{title}</h6>
-          <span className="text-xs text-slate-500">{date}</span>
+          <h1 className="text-md font-medium">{title}</h1>
+          <span className="text-xs   text-slate-500">
+            {formattedDate}
+          </span>
         </div>
         <MdOutlinePushPin
           onClick={onPinNote}
