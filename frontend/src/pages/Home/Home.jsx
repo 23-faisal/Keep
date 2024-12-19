@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
+import { toast } from "sonner";
 
 const fetchNotes = async (token) => {
   const response = await axios.get(
@@ -40,6 +41,23 @@ const Home = () => {
     setIsDialogOpen(false);
   };
 
+  const deleteNote = async (noteId) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/notes/delete-note/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast("Note deleted successfully");
+      refetch(); // Refresh the notes list
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete the note");
+    }
+  };
+
   if (isLoading) {
     return <p>Loading notes...</p>;
   }
@@ -63,6 +81,7 @@ const Home = () => {
               isPinned={note.isPinned}
               onEdit={() => {}}
               onPinNote={() => {}}
+              onDelete={() => deleteNote(note._id)} // Pass the delete function
             />
           ))}
       </div>

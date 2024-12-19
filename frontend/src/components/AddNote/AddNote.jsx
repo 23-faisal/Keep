@@ -48,13 +48,12 @@ const AddNote = ({ onClose, refetchNotes }) => {
       toast("Note added successfully");
       reset();
       setTags([]);
-      refetchNotes(); // Refetch notes
       onClose(); // Close the dialog
+      refetchNotes(); // Refresh the notes list
     } catch (error) {
-      toast(error.message);
+      toast.error(error.message);
     }
   };
-
   const addTag = () => {
     const tagValue = document.getElementById("tagInput").value.trim();
     if (!tagValue) {
