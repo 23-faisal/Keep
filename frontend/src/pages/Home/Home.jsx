@@ -1,4 +1,5 @@
 import AddNote from "@/components/AddNote/AddNote";
+import EmptyCard from "@/components/EmprtyCard/EmptyCard";
 import NoteCard from "@/components/NoteCard/NoteCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useAuthStore from "@/store/userStore";
@@ -15,7 +16,7 @@ const fetchNotes = async (token) => {
       },
     }
   );
-  return response.data.notes; // Assuming `notes` is the array returned
+  return response.data.notes;
 };
 
 const Home = () => {
@@ -27,9 +28,9 @@ const Home = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["notes", token], // Unique key for caching
-    queryFn: () => fetchNotes(token), // Fetch function
-    enabled: !!token, // Only fetch if token is available
+    queryKey: ["notes", token],
+    queryFn: () => fetchNotes(token),
+    enabled: !!token,
   });
 
   if (isLoading) {
@@ -42,22 +43,26 @@ const Home = () => {
 
   return (
     <div className="mt-10 container px-4 mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
+      <div>
         {notes?.length > 0 ? (
           notes.map((note) => (
-            <NoteCard
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center"
               key={note._id}
-              title={note.title}
-              date={note.date}
-              content={note.content}
-              tags={note.tags}
-              isPinned={note.isPinned}
-              onEdit={() => {}}
-              onPinNote={() => {}}
-            />
+            >
+              <NoteCard
+                title={note.title}
+                date={note.date}
+                content={note.content}
+                tags={note.tags}
+                isPinned={note.isPinned}
+                onEdit={() => {}}
+                onPinNote={() => {}}
+              />
+            </div>
           ))
         ) : (
-          <p>No notes available.</p>
+          <EmptyCard />
         )}
       </div>
 
