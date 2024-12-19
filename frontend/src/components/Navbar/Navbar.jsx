@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "@/store/userStore";
 import { Button } from "../ui/button";
 const Navbar = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, setSearchQuery } = useAuthStore();
   const [value, setValue] = useState("");
 
   const navigate = useNavigate();
@@ -14,10 +14,15 @@ const Navbar = () => {
   // Function to handle search button click
   const handleSearch = () => {
     if (value.trim()) {
-      alert(`Searching for: ${value}`);
+      setSearchQuery(value);
     } else {
       alert("Please enter a search term!");
     }
+  };
+
+  const handleClearSearch = () => {
+    setValue("");
+    setSearchQuery("");
   };
   return (
     <header>
@@ -36,7 +41,7 @@ const Navbar = () => {
             />
             {value && (
               <IoCloseSharp
-                onClick={() => setValue("")}
+                onClick={handleClearSearch}
                 className="absolute right-10 top-2.5 cursor-pointer text-red-600"
               />
             )}

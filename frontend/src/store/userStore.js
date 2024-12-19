@@ -7,8 +7,10 @@ const useAuthStore = create(
     (set) => ({
       user: localStorage.getItem("user") || null,
       token: localStorage.getItem("token") || null,
+      searchQuery: "",
       setUser: (user) => set({ user: user }),
       setToken: (token) => set({ token: token }),
+      setSearchQuery: (query) => set({ searchQuery: query }),
       logout: () => {
         // Remove the token from cookies when logging out
         Cookies.remove("token"); // Remove token from cookies
