@@ -41,8 +41,6 @@ const Home = () => {
     enabled: !!token,
   });
 
-  console.log(notes);
-
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
