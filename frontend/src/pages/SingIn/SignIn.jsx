@@ -29,8 +29,6 @@ const SignIn = () => {
         }
       );
 
-      console.log(response.data);
-
       if (response.data?.success) {
         const { user, token } = response.data;
 
