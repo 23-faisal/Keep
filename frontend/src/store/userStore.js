@@ -1,14 +1,19 @@
+import Cookies from "js-cookie";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const useAuthStore = create(
   persist(
     (set) => ({
-      user: null,
-      token: null,
+      user: localStorage.getItem("user") || null,
+      token: localStorage.getItem("token") || null,
       setUser: (user) => set({ user: user }),
       setToken: (token) => set({ token: token }),
-      logout: () => set({ user: null, token: null }),
+      logout: () => {
+        // Remove the token from cookies when logging out
+        Cookies.remove("token"); // Remove token from cookies
+        set({ user: null, token: null });
+      },
     }),
     {
       name: "auth-storage",

@@ -100,7 +100,7 @@ export const getAllNotes = async (req, res, next) => {
     res.status(200).json({
       success: true,
       notes,
-      message: "All notes retreived successfully",
+      message: "All notes retrieved successfully",
     });
   } catch (error) {
     next(errorHandler(error));
