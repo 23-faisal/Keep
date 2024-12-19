@@ -1,14 +1,23 @@
+import useAuthStore from "@/store/userStore";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
-import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Input } from "../ui/input";
+import { toast } from "sonner";
+import {
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
+import { Button } from "../ui/button";
 import { ImCross } from "react-icons/im";
 
-const AddNote = () => {
+const AddNote = ({ onClose, refetchNotes }) => {
+  const { token } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -18,10 +27,32 @@ const AddNote = () => {
   } = useForm();
   const [tags, setTags] = useState([]);
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", { ...data, tags });
-    reset();
-    setTags([]);
+  const onSubmit = async (data) => {
+    try {
+      const noteData = {
+        title: data.title,
+        content: data.content,
+        tags: tags,
+      };
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/notes/add-note`,
+        noteData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast("Note added successfully");
+      reset();
+      setTags([]);
+      refetchNotes(); // Refetch notes
+      onClose(); // Close the dialog
+    } catch (error) {
+      toast(error.message);
+    }
   };
 
   const addTag = () => {
@@ -73,7 +104,8 @@ const AddNote = () => {
           <Label className="font-semibold text-md" htmlFor="content">
             Content
           </Label>
-          <Textarea className='h-32'
+          <Textarea
+            className="h-32"
             id="content"
             placeholder="Enter content"
             {...register("content", { required: "Content is required" })}
@@ -122,14 +154,14 @@ const AddNote = () => {
         </div>
 
         {/* Submit Button */}
-        <div>
+        <DialogFooter>
           <Button
             type="submit"
             className="w-full bg-blue-500 font-semibold text-md text-white p-2 rounded hover:bg-blue-600"
           >
             Save
           </Button>
-        </div>
+        </DialogFooter>
       </form>
     </div>
   );
