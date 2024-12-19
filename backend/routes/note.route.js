@@ -4,6 +4,7 @@ import {
   deleteNote,
   editNote,
   getAllNotes,
+  searchNotes,
   updatePinnedValue,
 } from "../controllers/notes.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
@@ -28,5 +29,7 @@ notesRouter.put(
   authMiddleware,
   updatePinnedValue
 );
+
+notesRouter.get("/search-notes", authMiddleware, searchNotes);
 
 export default notesRouter;

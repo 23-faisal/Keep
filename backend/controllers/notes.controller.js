@@ -173,3 +173,41 @@ export const updatePinnedValue = async (req, res, next) => {
     next(errorHandler(error));
   }
 };
+
+// search notes
+
+export const searchNotes = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const { query } = req.query;
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: "Search query is required",
+      });
+    }
+
+    const matchingNotes = await Note.find({
+      userId: _id,
+      $or: [
+        { title: { $regex: new RegExp(query, "i") } },
+        { content: { $regex: new RegExp(query, "i") } },
+      ],
+    });
+
+    if (!matchingNotes) {
+      return res.status(400).json({
+        success: false,
+        message: "No note found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      notes: matchingNotes,
+      message: "Notes matching the search query retrieved",
+    });
+  } catch (error) {
+    next(errorHandler(error));
+  }
+};
